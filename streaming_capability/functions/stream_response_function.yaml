@@ -3,9 +3,34 @@ parameters:
     optional: true
   - name: stream_format
     optional: true
+  - name: enable_file_upload
+    optional: true
 
 action_groups:
-  # Action Group 1: JSON Format SSE Stream (response_chunk_ref: $.delta.content)
+  # Action Group 1: File Upload Action (type: file-upload)
+  - condition: 'enable_file_upload == "true"'
+    actions:
+      - type: file-upload
+        scripting_type: "spel"
+        content:
+          message: "Please select and upload a document (PDF, DOCX, JPG, PNG, or TXT) to proceed."
+          on_cancel:
+            title: "Cancel File Upload?"
+            message: "Are you sure you want to cancel the file upload?"
+            button_labels:
+              cancel: "yes"
+              continue: "no"
+        allowed_file_types:
+          - pdf
+          - docx
+          - jpg
+          - png
+          - txt
+        max_file_size: 10
+        max_files_allowed: 3
+        result_variable: uploaded_file_result
+
+  # Action Group 2: JSON Format SSE Stream (response_chunk_ref: $.delta.content)
   - condition: 'stream_format == null || stream_format == "json"'
     actions:
       - type: set-variables
@@ -25,7 +50,7 @@ action_groups:
         response_chunk_ref: $.delta.content
         result_variable: streamed_json_result
 
-  # Action Group 2: Plain Text Format SSE Stream (response_chunk_ref: $)
+  # Action Group 3: Plain Text Format SSE Stream (response_chunk_ref: $)
   - condition: 'stream_format == "text"'
     actions:
       - type: set-variables
@@ -46,4 +71,5 @@ action_groups:
 
 result:
   aggregated_response: "<? streamed_json_result ?: streamed_text_result ?>"
+  uploaded_files: "<? uploaded_file_result ?>"
   status: "Completed"

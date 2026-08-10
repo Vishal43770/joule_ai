@@ -1,10 +1,12 @@
-description: Stream real-time AI response or data updates using Server-Sent Events (SSE).
+description: Stream real-time AI response or data updates using Server-Sent Events (SSE) and handle file uploads.
 
 slots:
   - name: topic
     description: Topic or query for streamed response generation
   - name: stream_format
     description: Data format for SSE stream (json or text)
+  - name: enable_file_upload
+    description: Flag to trigger file upload dialog (true or false)
 
 target:
   type: function
@@ -14,9 +16,13 @@ target:
       value: "<? topic ?>"
     - name: stream_format
       value: "<? stream_format ?>"
+    - name: enable_file_upload
+      value: "<? enable_file_upload ?>"
 
 response_context:
   - value: $target_result.aggregated_response
     description: Complete aggregated streamed text response
+  - value: $target_result.uploaded_files
+    description: Details of uploaded files
   - value: $target_result.status
     description: Execution status of the streaming action
