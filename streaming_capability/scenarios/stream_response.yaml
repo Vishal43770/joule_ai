@@ -1,0 +1,22 @@
+description: Stream real-time AI response or data updates using Server-Sent Events (SSE).
+
+slots:
+  - name: topic
+    description: Topic or query for streamed response generation
+  - name: stream_format
+    description: Data format for SSE stream (json or text)
+
+target:
+  type: function
+  name: stream_response_function
+  parameters:
+    - name: topic
+      value: "<? topic ?>"
+    - name: stream_format
+      value: "<? stream_format ?>"
+
+response_context:
+  - value: $target_result.aggregated_response
+    description: Complete aggregated streamed text response
+  - value: $target_result.status
+    description: Execution status of the streaming action

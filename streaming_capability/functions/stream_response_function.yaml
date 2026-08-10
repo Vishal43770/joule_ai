@@ -1,0 +1,49 @@
+parameters:
+  - name: topic
+    optional: true
+  - name: stream_format
+    optional: true
+
+action_groups:
+  # Action Group 1: JSON Format SSE Stream (response_chunk_ref: $.delta.content)
+  - condition: 'stream_format == null || stream_format == "json"'
+    actions:
+      - type: set-variables
+        variables:
+          - name: topic_val
+            value: "<? topic ?: 'General Query' ?>"
+
+      - type: streamed-message
+        method: POST
+        system_alias: StreamingService
+        path: "/api/v1/stream/json"
+        headers:
+          Accept: "text/event-stream"
+          Connection: "keep-alive"
+          Cache-Control: "no-cache"
+        body: '{"query": "<? topic_val ?>"}'
+        response_chunk_ref: $.delta.content
+        result_variable: streamed_json_result
+
+  # Action Group 2: Plain Text Format SSE Stream (response_chunk_ref: $)
+  - condition: 'stream_format == "text"'
+    actions:
+      - type: set-variables
+        variables:
+          - name: topic_val
+            value: "<? topic ?: 'General Query' ?>"
+
+      - type: streamed-message
+        method: GET
+        system_alias: StreamingService
+        path: "/api/v1/stream/text"
+        headers:
+          Accept: "text/event-stream"
+          Connection: "keep-alive"
+          Cache-Control: "no-cache"
+        response_chunk_ref: $
+        result_variable: streamed_text_result
+
+result:
+  aggregated_response: "<? streamed_json_result ?: streamed_text_result ?>"
+  status: "Completed"

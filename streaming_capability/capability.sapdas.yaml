@@ -1,0 +1,12 @@
+schema_version: 3.28.0
+
+metadata:
+  namespace: joule.ext
+  name: streaming_capability
+  version: 1.0.0
+  display_name: Streamed Message SSE Capability
+  description: Capability testing Server-Sent Event (SSE) Streamed Message Action in SAP Joule.
+
+system_aliases:
+  StreamingService:
+    destination: StreamingService
