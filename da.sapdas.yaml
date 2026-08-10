@@ -1,5 +1,5 @@
 schema_version: 1.4.0
-name: streaming_assistant
+name: upload_assistant
 capabilities:
   - type: local
-    folder: ./streaming_capability
+    folder: ./upload_capability

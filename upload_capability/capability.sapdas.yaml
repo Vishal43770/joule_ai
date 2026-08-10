@@ -1,0 +1,12 @@
+schema_version: 3.28.0
+
+metadata:
+  namespace: joule.ext
+  name: upload_capability
+  version: 1.0.0
+  display_name: File Upload & User Confirmation Capability
+  description: Dedicated capability testing User Confirmation Actions (type: user-confirmation) and File Processing workflows in SAP Joule.
+
+system_aliases:
+  CURRENCY_CONVERTER_IAS:
+    destination: CURRENCY_CONVERTER_IAS

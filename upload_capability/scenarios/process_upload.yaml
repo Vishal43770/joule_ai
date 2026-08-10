@@ -1,0 +1,15 @@
+description: Trigger file upload confirmation and document processing workflow.
+
+slots:
+  - name: doc_type
+    description: Type of document to upload (invoice, purchase order, claim)
+
+target:
+  type: function
+  name: process_upload
+
+response_context:
+  - value: $target_result.user_decision
+    description: Confirmation decision
+  - value: $target_result.status
+    description: Status of upload operation

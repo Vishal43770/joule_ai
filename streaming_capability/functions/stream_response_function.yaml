@@ -3,53 +3,10 @@ parameters:
     optional: true
   - name: stream_format
     optional: true
-  - name: action_mode
-    optional: true
 
 action_groups:
-  # -------------------------------------------------------------
-  # ACTION GROUP 1: File Upload Action (type: file-upload)
-  # -------------------------------------------------------------
-  - condition: 'action_mode == "upload" || topic == "upload"'
-    actions:
-      - type: status-update
-        message: "Initializing secure file upload component..."
-
-      - type: file-upload
-        scripting_type: "spel"
-        content:
-          message: "Please upload your document or image file (PDF, DOCX, JPG, PNG)."
-          on_cancel:
-            title: "Cancel Upload"
-            message: "Are you sure you want to cancel uploading the file?"
-            button_labels:
-              cancel: "yes"
-              continue: "no"
-          allowed_file_types:
-            - pdf
-            - docx
-            - jpg
-            - png
-          max_file_size: 10
-          max_files_allowed: 5
-        result_variable: uploaded_files_result
-
-      - type: message
-        message:
-          type: card
-          content:
-            title: "File Upload Status"
-            subtitle: "Files Received"
-            description:
-              value: "File upload operation processed successfully."
-              markdown: true
-            status: "Success"
-            statusState: "success"
-
-  # -------------------------------------------------------------
-  # ACTION GROUP 2: Standard Response Flow
-  # -------------------------------------------------------------
-  - condition: 'action_mode == null && topic != "upload"'
+  # Action Group 1: JSON Format Stream (Mocked with set-variables)
+  - condition: 'stream_format == null || stream_format == "json"'
     actions:
       - type: status-update
         message: "Simulating live AI response stream..."
@@ -73,7 +30,24 @@ action_groups:
             status: "Streaming Complete"
             statusState: "success"
 
+  # Action Group 2: Plain Text Format Stream (Mocked with set-variables)
+  - condition: 'stream_format == "text"'
+    actions:
+      - type: status-update
+        message: "Streaming text data chunks..."
+
+      - type: set-variables
+        variables:
+          - name: topic_val
+            value: "<? topic ?: 'Artificial Intelligence' ?>"
+          - name: mock_stream_response
+            value: "Artificial Intelligence (AI) simulates human intelligence processes through machine learning algorithms and neural networks."
+
+      - type: message
+        message:
+          type: text
+          content: "### 🛰️ Streamed Text Output for **<? topic_val ?>**\n\n<? mock_stream_response ?>"
+
 result:
   aggregated_response: "<? mock_stream_response ?>"
-  upload_result: "<? uploaded_files_result ?>"
   status: "Completed"

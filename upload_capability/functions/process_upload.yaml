@@ -1,0 +1,34 @@
+parameters:
+  - name: doc_type
+    optional: true
+
+action_groups:
+  - actions:
+      - type: status-update
+        message: "Initializing confirmation dialog for file upload..."
+
+      - type: user-confirmation
+        scripting_type: "spel"
+        content:
+          title: "Confirm Document Upload"
+          subtitle: "Would you like to process and upload your document file?"
+          button_labels:
+            confirm: "Yes, Upload"
+            cancel: "No, Cancel"
+        confirmation_variable: upload_confirmed
+
+      - type: message
+        message:
+          type: card
+          content:
+            title: "File Upload Status"
+            subtitle: "User Confirmation Result"
+            description:
+              value: "Confirmation decision received: **<? upload_confirmed ?>**. Document processing complete!"
+              markdown: true
+            status: "Completed"
+            statusState: "success"
+
+result:
+  user_decision: "<? upload_confirmed ?>"
+  status: "Completed"
