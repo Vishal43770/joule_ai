@@ -1,0 +1,6 @@
+# Ignore compiled runtime artifact files
+*.daar
+
+# Node & Temp files
+node_modules/
+*.log
