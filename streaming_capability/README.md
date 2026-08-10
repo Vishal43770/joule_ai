@@ -1,6 +1,6 @@
-# 🌊 Streaming Response Capability (`streaming_capability`)
+# 🌊 Streaming Response & File Upload Capability (`streaming_capability`)
 
-This capability implements and demonstrates the **Streamed Message Action** (`type: streamed-message`) for real-time Server-Sent Events (SSE) streaming in SAP Joule.
+This capability implements and demonstrates the **Streamed Message Action** (`type: streamed-message`) for real-time Server-Sent Events (SSE) streaming and the **File Upload Action** (`type: file-upload`) in SAP Joule.
 
 ---
 
@@ -15,15 +15,18 @@ This capability implements and demonstrates the **Streamed Message Action** (`ty
    - Uses JSONPath expression `$.delta.content` to extract text from SSE JSON payloads: `data: {"delta":{"content":"text"}}`
 4. **Plain Text Response Chunk Referencing**:
    - Uses root `$` to extract text from raw SSE payloads: `data: text`
-5. **Automatic Aggregation**: Joule aggregates chunks in real-time and updates the context variable defined in `result_variable`.
+5. **File Upload Action (`type: file-upload`)**:
+   - Displays file selection widget supporting configured extensions (`pdf`, `docx`, `jpg`, `png`, `txt`).
+   - Configures max size (up to 10 MB) and max files count (up to 10 files).
+   - Custom cancellation confirmation dialog (`on_cancel` title, message, and button labels).
 
 ---
 
 ## 📁 File Structure
 
 - [`capability.sapdas.yaml`](file:///home/kiranftw/joule_ai/streaming_capability/capability.sapdas.yaml): Descriptor manifest defining `StreamingService` system alias.
-- [`scenarios/stream_response.yaml`](file:///home/kiranftw/joule_ai/streaming_capability/scenarios/stream_response.yaml): Scenario trigger definition for streaming queries.
-- [`functions/stream_response_function.yaml`](file:///home/kiranftw/joule_ai/streaming_capability/functions/stream_response_function.yaml): Dialog function implementing `type: streamed-message` for JSON and Plain Text streams.
+- [`scenarios/stream_response.yaml`](file:///home/kiranftw/joule_ai/streaming_capability/scenarios/stream_response.yaml): Scenario trigger definition supporting topic queries and file upload triggers.
+- [`functions/stream_response_function.yaml`](file:///home/kiranftw/joule_ai/streaming_capability/functions/stream_response_function.yaml): Dialog function implementing `type: streamed-message` and `type: file-upload`.
 
 ---
 

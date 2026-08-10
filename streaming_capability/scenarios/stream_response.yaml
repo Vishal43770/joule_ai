@@ -1,10 +1,12 @@
-description: Stream real-time AI response or data updates using Server-Sent Events (SSE).
+description: Answer questions, provide information, or trigger file upload component for PDF, DOCX, JPG, PNG files.
 
 slots:
   - name: topic
-    description: Topic or query for streamed response generation
+    description: Topic or query for response generation
   - name: stream_format
-    description: Data format for SSE stream (json or text)
+    description: Data format (json or text)
+  - name: action_mode
+    description: Action mode (upload or stream)
 
 target:
   type: function
@@ -12,6 +14,6 @@ target:
 
 response_context:
   - value: $target_result.aggregated_response
-    description: Complete aggregated streamed text response
+    description: Complete response content
   - value: $target_result.status
-    description: Execution status of the streaming action
+    description: Status of the action
