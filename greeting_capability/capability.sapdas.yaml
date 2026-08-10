@@ -1,0 +1,12 @@
+schema_version: 3.28.0
+
+metadata:
+  namespace: joule.ext
+  name: greeting_capability
+  version: 1.0.0
+  display_name: Custom Greeting Capability
+  description: Capability for handling custom greetings with static parameter injection.
+
+system_aliases:
+  CURRENCY_CONVERTER_IAS:
+    destination: CURRENCY_CONVERTER_IAS

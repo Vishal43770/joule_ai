@@ -1,0 +1,28 @@
+description: Search a train station using the provided information, capability context, and static parameters.
+
+slots:
+  - name: date
+    description: Date of travel for the station search
+
+target:
+  type: function
+  name: search_station
+  parameters:
+    - name: from_station_id
+      value: $capability_context.from_station_id
+    - name: to_station_id
+      value: Wiesloch-Walldorf
+
+response_context:
+  - value: $target_result.id
+    description: Train Station ID
+  - value: $target_result.capacity
+    description: Station Capacity
+
+capability_context:
+  - name: station_id
+    value: $target_result.id
+  - name: station_capacity
+    value: $target_result.capacity
+  - name: last_executed_scenario
+    value: search_trainstation

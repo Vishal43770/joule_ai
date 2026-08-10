@@ -1,0 +1,28 @@
+parameters:
+  - name: pr_id
+    optional: false  # Mandatory parameter (required for scenario sources dependency)
+
+action_groups:
+  - actions:
+      - type: set-variables
+        variables:
+          - name: generated_po_id
+            value: "PO-90021"
+          - name: linked_pr
+            value: "<? pr_id ?>"
+
+      - type: message
+        message:
+          type: card
+          content:
+            title: "Purchase Order Created: <? generated_po_id ?>"
+            subtitle: "Linked Requisition: <? linked_pr ?>"
+            description:
+              value: "Purchase Order **<? generated_po_id ?>** has been created successfully based on PR **<? linked_pr ?>**!"
+              markdown: true
+            status: "Created"
+            statusState: "success"
+
+result:
+  po_id: "<? generated_po_id ?>"
+  pr_id: "<? linked_pr ?>"

@@ -1,0 +1,12 @@
+schema_version: 3.28.0
+
+metadata:
+  namespace: joule.ext
+  name: dependency_capability
+  version: 1.0.0
+  display_name: Purchase Order Dependency Capability
+  description: Demonstrates Scenario Dependencies (sources) and Execution Groups for workflow slot filling.
+
+system_aliases:
+  CURRENCY_CONVERTER_IAS:
+    destination: CURRENCY_CONVERTER_IAS

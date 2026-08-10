@@ -1,5 +1,5 @@
 schema_version: 1.4.0
-name: weather_assistant
+name: dependency_assistant
 capabilities:
   - type: local
-    folder: ./sample_capability
+    folder: ./dependency_capability

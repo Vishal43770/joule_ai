@@ -1,0 +1,28 @@
+parameters:
+  - name: pr_type
+    optional: true
+
+action_groups:
+  - actions:
+      - type: set-variables
+        variables:
+          - name: generated_pr_id
+            value: "PR-88402"
+          - name: total_amt
+            value: "$15,400"
+
+      - type: message
+        message:
+          type: card
+          content:
+            title: "Purchase Requisition: <? generated_pr_id ?>"
+            subtitle: "Status: Approved"
+            description:
+              value: "Purchase Requisition **<? generated_pr_id ?>** created for amount **<? total_amt ?>**."
+              markdown: true
+            status: "Approved"
+            statusState: "success"
+
+result:
+  id: "<? generated_pr_id ?>"
+  amount: "<? total_amt ?>"
