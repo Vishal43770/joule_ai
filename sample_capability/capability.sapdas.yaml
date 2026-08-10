@@ -1,0 +1,12 @@
+schema_version: 3.28.0
+
+metadata:
+  namespace: joule.ext
+  name: sample_capability
+  version: 1.0.0
+  display_name: Weather Capability
+  description: Weather Capability for testing basic Function to Scenario to Response flow.
+
+system_aliases:
+  WeatherService:
+    destination: WeatherService

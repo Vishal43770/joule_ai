@@ -1,0 +1,160 @@
+# ==============================================================================
+# MASTER REFERENCE: SAP Joule Dialog Function Patterns & UI Message Variations
+# File: functions/fetch_weather_info.yaml
+# ==============================================================================
+
+parameters:
+  - name: city
+    optional: true
+  - name: weather_rating
+    optional: true
+
+action_groups:
+  # ============================================================================
+  # ACTION GROUP 1: Initial Execution (Main Weather Flow & All 7 UI Message Types)
+  # Runs when the user asks for weather and weather_rating is null
+  # ============================================================================
+  - condition: 'weather_rating == null'
+    actions:
+
+      # ------------------------------------------------------------------------
+      # PATTERN 1: type: status-update (Real-Time Progress Feedback)
+      # ------------------------------------------------------------------------
+      - type: status-update
+        message: "Connecting to weather and backend services..."
+      
+      # ------------------------------------------------------------------------
+      # PATTERN 2: type: set-variables (Variable Extraction & SpEL Scripting)
+      # ------------------------------------------------------------------------
+      - type: set-variables
+        variables:
+          - name: city_val
+            value: "<? city ?: 'Mumbai' ?>"
+          - name: temp_val
+            value: "32°C"
+          - name: time_val
+            value: "2026-08-10 14:00:00 UTC"
+
+      # ------------------------------------------------------------------------
+      # VARIATION 1: type: text (Standard Text & Rich Markdown)
+      # ------------------------------------------------------------------------
+      - type: message
+        message:
+          type: text
+          content: "### Weather Forecast for **<? city_val ?>**\n- **Temperature:** <? temp_val ?>\n- **Status:** Clear Skies ☀️"
+
+      # ------------------------------------------------------------------------
+      # VARIATION 2: type: card (Structured Feature Card)
+      # ------------------------------------------------------------------------
+      - type: message
+        message:
+          type: card
+          content:
+            title: "Weather Report: <? city_val ?>"
+            subtitle: "3-Day Forecast Overview"
+            imageUrl: "sap-icon://weather-proofing"
+            description:
+              value: "Max Temperature: **<? temp_val ?>**. Valid Time: <? time_val ?>."
+              markdown: true
+            status: "Live"
+            statusState: "success"
+
+      # ------------------------------------------------------------------------
+      # VARIATION 3: type: list (Vertical Items List)
+      # ------------------------------------------------------------------------
+      - type: message
+        message:
+          type: list
+          content:
+            title: "Weather Forecast List for <? city_val ?>"
+            subtitle: "Upcoming 3-Day Forecast"
+            elements:
+              - title: "Today"
+                subtitle: "Sunny"
+                description: "High of <? temp_val ?>"
+              - title: "Tomorrow"
+                subtitle: "Partly Cloudy"
+                description: "High of 30°C"
+
+      # ------------------------------------------------------------------------
+      # VARIATION 4: type: carousel (Horizontal Scrollable Cards)
+      # -------------------------------------------------------------
+      - type: message
+        message:
+          type: carousel
+          content:
+            cards:
+              - title: "Morning Weather"
+                subtitle: "24°C - Mild"
+                imageUrl: "sap-icon://weather-proofing"
+              - title: "Afternoon Weather"
+                subtitle: "<? temp_val ?> - Sunny"
+                imageUrl: "sap-icon://weather-proofing"
+
+      # ------------------------------------------------------------------------
+      # VARIATION 5: type: ui5integrationCard (SAP Fiori Integration Dashboard Card)
+      # ------------------------------------------------------------------------
+      - type: message
+        message:
+          type: ui5integrationCard
+          content:
+            manifest:
+              _version: "1.17.0"
+              sap.app:
+                id: "com.sap.weather.card"
+                type: "card"
+              sap.card:
+                type: "Analytical"
+                header:
+                  title: "Weather Trend"
+                  subTitle: "<? city_val ?>"
+
+      # ------------------------------------------------------------------------
+      # VARIATION 6: type: illustrated_message (SAP Fiori SVG Illustration)
+      # ------------------------------------------------------------------------
+      - type: message
+        message:
+          type: illustrated_message
+          content:
+            illustration_name: "tntSuccess"
+            title: "Operation Complete"
+            subtitle: "Weather report for <? city_val ?> generated successfully."
+
+      # ------------------------------------------------------------------------
+      # VARIATION 7: type: likert_scale (Interactive Rating Prompt / Slot Filler)
+      # ------------------------------------------------------------------------
+      - type: message
+        message:
+          type: likert_scale
+          content:
+            prompt: "How helpful was this weather information?"
+            options:
+              - label: "Strongly Disagree"
+                value: 1
+              - label: "Neutral"
+                value: 3
+              - label: "Strongly Agree"
+                value: 5
+
+  # ============================================================================
+  # ACTION GROUP 2: Feedback Capture & Save Action (Runs when user rates)
+  # ============================================================================
+  - condition: 'weather_rating != null'
+    actions:
+      - type: set-variables
+        variables:
+          - name: saved_rating
+            value: "<? weather_rating ?>"
+      - type: message
+        message:
+          type: text
+          content: "Thank you for your feedback! Your rating of **<? saved_rating ?>/5** has been recorded successfully."
+
+# ==============================================================================
+# RESULT DEFINITION
+# ==============================================================================
+result:
+  timestamp: "<? time_val ?>"
+  temperatureMax: "<? temp_val ?>"
+  city: "<? city_val ?>"
+  user_rating: "<? saved_rating ?>"
