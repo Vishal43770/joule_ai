@@ -9,11 +9,6 @@ slots:
 target:
   type: function
   name: stream_response_function
-  parameters:
-    - name: topic
-      value: "<? topic ?>"
-    - name: stream_format
-      value: "<? stream_format ?>"
 
 response_context:
   - value: $target_result.aggregated_response
