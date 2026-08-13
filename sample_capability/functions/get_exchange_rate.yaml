@@ -1,41 +1,47 @@
-
-schema_version: 3.26.0
-
 parameters:
   - name: currency_from
     optional: true
   - name: currency_to
     optional: true
-  - name: currency_date
-    optional: true
 
 action_groups:
-
   - actions:
-
       - type: set-variables
         variables:
           - name: from_currency
-            value: "<? currency_from ?: 'USD' ?>"
+            value: "<? currency_from != null ? currency_from.toUpperCase() : 'USD' ?>"
           - name: to_currency
-            value: "<? currency_to ?: 'EUR' ?>"
-          - name: rate_date
-            value: "<? currency_date ?: 'latest' ?>"
-          - name: exchange_rate
-            value: "<? 'Unavailable' ?>"
+            value: "<? currency_to != null ? currency_to.toUpperCase() : 'EUR' ?>"
+      # Frankfurter v2 returns a flat JSON object with a top-level `rate` field.
+      - type: api-request
+        system_alias: FrankfurterAPI
+        path: "/v2/rate/<? from_currency ?>/<? to_currency ?>"
+        method: GET
+        headers:
+          Accept: application/json
+        timeout: 15
+        result_variable: api_result
 
+  - condition: "api_result != null && api_result.status_code == 200 && api_result.body != null && api_result.body.rate != null"
+    actions:
+      - type: set-variables
+        variables:
+          - name: rate_value
+            value: "<? api_result.body.rate ?>"
       - type: message
         message:
           type: text
-          content: |
-            Exchange rate lookup is disabled.
-            - From: <? from_currency ?>
-            - To: <? to_currency ?>
-            - Date: <? rate_date ?>
-            - Rate: <? exchange_rate ?>
+          content: "<? 'Exchange Rate Retrieved Successfully\n- From: ' + from_currency + '\n- To: ' + to_currency + '\n- Rate: ' + rate_value + '\n- Provider: Frankfurter' ?>"
+
+  - condition: "api_result == null || api_result.status_code != 200 || api_result.body == null || api_result.body.rate == null"
+    actions:
+      - type: message
+        message:
+          type: text
+          content: "Unable to retrieve an exchange rate. Ensure the requested currencies use ISO codes, then try again."
 
 result:
-  exchange_rate: "<? exchange_rate ?>"
+  exchange_rate: "<? api_result != null && api_result.status_code == 200 && api_result.body != null ? api_result.body.rate : null ?>"
   from_currency: "<? from_currency ?>"
   to_currency: "<? to_currency ?>"
-  date: "<? rate_date ?>"
+  provider: "<? api_result != null && api_result.status_code == 200 && api_result.body != null ? 'Frankfurter' : null ?>"
