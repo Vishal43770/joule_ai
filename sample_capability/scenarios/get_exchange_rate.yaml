@@ -1,10 +1,12 @@
 title: $i18n.GET_EXCHANGE_RATE_TITLE
-description: Get exchange rate between two currencies
+description: Get an exchange rate or convert a monetary amount between two currencies.
 slots:
   - name: currency_from
     description: Currency to convert from
   - name: currency_to
     description: Currency to convert to
+  - name: amount
+    description: Numeric amount to convert, without a currency symbol. Leave empty when only the exchange rate is requested.
 target:
   type: function
   name: get_exchange_rate

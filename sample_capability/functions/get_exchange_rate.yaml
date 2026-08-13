@@ -3,6 +3,8 @@ parameters:
     optional: true
   - name: currency_to
     optional: true
+  - name: amount
+    optional: true
 
 action_groups:
   - actions:
@@ -28,10 +30,44 @@ action_groups:
         variables:
           - name: rate_value
             value: "<? api_result.body.rate ?>"
+
+  - condition: "api_result != null && api_result.status_code == 200 && api_result.body != null && api_result.body.rate != null && amount != null"
+    actions:
+      - type: set-variables
+        variables:
+          # Slots are strings. Convert the supplied amount to a number first.
+          - name: amount_value
+            value: "<? T(java.lang.Double).parseDouble(amount) ?>"
+
+  # Currency conversion rule: Converted Amount = Amount x Exchange Rate.
+  # It uses the local values, not an API-provided converted amount.
+  - condition: "amount_value != null && rate_value != null"
+    actions:
+      - type: set-variables
+        variables:
+          - name: converted_amount
+            value: "<? amount_value * rate_value ?>"
+
+  - condition: "amount != null && amount_value != null && rate_value != null && converted_amount != null"
+    actions:
+      - type: message
+        message:
+          type: text
+          content: "<? 'Currency Conversion Successful\n- Amount: ' + amount + ' ' + from_currency + '\n- Converted Amount: ' + converted_amount + ' ' + to_currency + '\n- Exchange Rate: ' + rate_value + '\n- Provider: Frankfurter' ?>"
+
+  - condition: "api_result != null && api_result.status_code == 200 && api_result.body != null && api_result.body.rate != null && amount == null"
+    actions:
       - type: message
         message:
           type: text
           content: "<? 'Exchange Rate Retrieved Successfully\n- From: ' + from_currency + '\n- To: ' + to_currency + '\n- Rate: ' + rate_value + '\n- Provider: Frankfurter' ?>"
+
+  - condition: "amount != null && (amount_value == null || rate_value == null || converted_amount == null)"
+    actions:
+      - type: message
+        message:
+          type: text
+          content: "Unable to calculate the converted amount. Provide a numeric amount, for example: Convert 500 USD to EUR."
 
   - condition: "api_result == null || api_result.status_code != 200 || api_result.body == null || api_result.body.rate == null"
     actions:
@@ -42,6 +78,8 @@ action_groups:
 
 result:
   exchange_rate: "<? api_result != null && api_result.status_code == 200 && api_result.body != null ? api_result.body.rate : null ?>"
+  amount: "<? amount ?>"
+  converted_amount: "<? converted_amount ?>"
   from_currency: "<? from_currency ?>"
   to_currency: "<? to_currency ?>"
   provider: "<? api_result != null && api_result.status_code == 200 && api_result.body != null ? 'Frankfurter' : null ?>"

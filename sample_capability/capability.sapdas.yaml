@@ -3,7 +3,7 @@ schema_version: 3.28.0
 metadata:
   namespace: joule.ext
   name: sample_capability
-  version: 1.1.0
+  version: 1.1.3
   display_name: Exchange Rate Capability
   description: Exchange Rate Capability using the public Frankfurter API to fetch current currency exchange rates.
 
