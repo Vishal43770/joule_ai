@@ -1,0 +1,25 @@
+title: Get Exchange Rate (FX)
+description: Get current or historical exchange rates between two currencies using the Frankfurter API.
+
+slots:
+  - name: currency_from
+    description: The source currency code to convert from (e.g., USD, GBP, INR)
+  - name: currency_to
+    description: The target currency code to convert to (e.g., EUR, JPY, CHF)
+  - name: currency_date
+    description: The date for the exchange rate (YYYY-MM-DD) or "latest" for current rates
+
+
+target:
+  type: function
+  name: get_exchange_rate
+
+response_context:
+  - value: exchange_rate
+    description: The exchange rate value between the two currencies
+  - value: from_currency
+    description: The source currency code
+  - value: to_currency
+    description: The target currency code
+  - value: date
+    description: The date of the exchange rate

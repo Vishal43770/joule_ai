@@ -1,5 +1,0 @@
-variables:
-  - name: from_station_id
-  - name: station_id
-  - name: station_capacity
-  - name: last_executed_scenario

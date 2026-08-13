@@ -1,9 +1,0 @@
-description: Greet the user when they say hi, hello, hey, greetings, or good morning.
-
-target:
-  type: function
-  name: greet
-
-response_context:
-  - value: $target_result.greeting
-    description: Custom greeting details

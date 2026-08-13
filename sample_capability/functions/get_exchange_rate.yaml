@@ -1,0 +1,41 @@
+
+schema_version: 3.26.0
+
+parameters:
+  - name: currency_from
+    optional: true
+  - name: currency_to
+    optional: true
+  - name: currency_date
+    optional: true
+
+action_groups:
+
+  - actions:
+
+      - type: set-variables
+        variables:
+          - name: from_currency
+            value: "<? currency_from ?: 'USD' ?>"
+          - name: to_currency
+            value: "<? currency_to ?: 'EUR' ?>"
+          - name: rate_date
+            value: "<? currency_date ?: 'latest' ?>"
+          - name: exchange_rate
+            value: "<? 'Unavailable' ?>"
+
+      - type: message
+        message:
+          type: text
+          content: |
+            Exchange rate lookup is disabled.
+            - From: <? from_currency ?>
+            - To: <? to_currency ?>
+            - Date: <? rate_date ?>
+            - Rate: <? exchange_rate ?>
+
+result:
+  exchange_rate: "<? exchange_rate ?>"
+  from_currency: "<? from_currency ?>"
+  to_currency: "<? to_currency ?>"
+  date: "<? rate_date ?>"

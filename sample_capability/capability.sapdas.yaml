@@ -4,9 +4,9 @@ metadata:
   namespace: joule.ext
   name: sample_capability
   version: 1.0.0
-  display_name: Weather Capability
-  description: Weather Capability for testing basic Function to Scenario to Response flow.
+  display_name: Exchange Rate Capability
+  description: Exchange Rate Capability using the Frankfurter API to fetch current and historical currency exchange rates.
 
 system_aliases:
-  WeatherService:
-    destination: WeatherService
+  FrankfurterAPI:
+    destination: FrankfurterAPI

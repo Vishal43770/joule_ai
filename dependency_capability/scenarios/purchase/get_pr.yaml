@@ -1,9 +1,0 @@
-description: Get or create a purchase requisition to obtain a valid purchase requisition ID.
-
-target:
-  type: function
-  name: purchase/get_pr
-
-response_context:
-  - value: $target_result.id
-    description: Purchase Requisition ID
